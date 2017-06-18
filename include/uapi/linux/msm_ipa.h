@@ -133,6 +133,11 @@
 #define IPA_FLT_MAC_ETHER_TYPE		(1ul << 21)
 
 /**
+ * maximal number of NAT PDNs in the PDN config table
+ */
+#define IPA_MAX_PDN_NUM 5
+
+/**
  * enum ipa_client_type - names for the various IPA "clients"
  * these are from the perspective of the clients, for e.g.
  * HSIC1_PROD means HSIC client is the producer and IPA is the
@@ -469,6 +474,7 @@ enum ipa_rm_resource_name {
  * @IPA_HW_v3_1: IPA hardware version 3.1
  * @IPA_HW_v3_5: IPA hardware version 3.5
  * @IPA_HW_v3_5_1: IPA hardware version 3.5.1
+ * @IPA_HW_v4_0: IPA hardware version 4.0
  */
 enum ipa_hw_type {
 	IPA_HW_None = 0,
@@ -483,8 +489,11 @@ enum ipa_hw_type {
 	IPA_HW_v3_1 = 11,
 	IPA_HW_v3_5 = 12,
 	IPA_HW_v3_5_1 = 13,
-	IPA_HW_MAX
+	IPA_HW_v4_0 = 14,
 };
+#define IPA_HW_MAX (IPA_HW_v4_0 + 1)
+
+#define IPA_HW_v4_0 IPA_HW_v4_0
 
 /**
  * struct ipa_rule_attrib - attributes of a routing/filtering
@@ -685,6 +694,11 @@ struct ipa_ipfltri_rule_eq {
  *  consecutive packets
  * @rule_id: rule_id to be assigned to the filter rule. In case client specifies
  *  rule_id as 0 the driver will assign a new rule_id
+ * @set_metadata: bool switch. should metadata replacement at the NAT block
+ *  take place?
+ * @pdn_idx: if action is "pass to source\destination NAT" then a comparison
+ * against the PDN index in the matching PDN entry will take place as an
+ * additional condition for NAT hit.
  */
 struct ipa_flt_rule {
 	uint8_t retain_hdr;
@@ -698,6 +712,8 @@ struct ipa_flt_rule {
 	uint8_t max_prio;
 	uint8_t hashable;
 	uint16_t rule_id;
+	uint8_t set_metadata;
+	uint8_t pdn_idx;
 };
 
 /**
@@ -1633,6 +1649,9 @@ enum ipacm_client_enum {
 #define IPA_IOC_GET_NAT_OFFSET _IOWR(IPA_IOC_MAGIC, \
 				IPA_IOCTL_GET_NAT_OFFSET, \
 				uint32_t *)
+#define IPA_IOC_NAT_MODIFY_PDN _IOWR(IPA_IOC_MAGIC, \
+				IPA_IOCTL_NAT_MODIFY_PDN, \
+				struct ipa_ioc_nat_pdn_entry *)
 #define IPA_IOC_SET_FLT _IOW(IPA_IOC_MAGIC, \
 			IPA_IOCTL_SET_FLT, \
 			uint32_t)
