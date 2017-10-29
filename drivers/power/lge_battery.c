@@ -988,6 +988,6 @@ static struct kernel_param_ops charge_start_ops = {
 module_param_cb(charge_start_level, &charge_start_ops,
 		&charge_start_level, 0644);
 
-module_init(lge_battery_init);
+late_initcall(lge_battery_init);
 module_exit(lge_battery_exit);
 MODULE_LICENSE("GPL");
