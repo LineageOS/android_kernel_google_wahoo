@@ -47,7 +47,7 @@ static char veritykeyid[VERITY_DEFAULT_KEY_ID_LENGTH];
 static char buildvariant[BUILD_VARIANT];
 
 static bool target_added;
-static bool verity_enabled = true;
+static bool verity_enabled = false;
 static struct dentry *debug_dir;
 static int android_verity_ctr(struct dm_target *ti, unsigned argc, char **argv);
 
