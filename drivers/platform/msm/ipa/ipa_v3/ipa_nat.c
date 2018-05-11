@@ -817,6 +817,12 @@ int ipa3_nat_del_cmd(struct ipa_ioc_v4_nat_del *del)
 	}
 
 	memset(&desc, 0, sizeof(desc));
+
+	if (!ipa3_ctx->nat_mem.is_dev_init) {
+		IPAERR_RL("NAT hasn't been initialized\n");
+		return -EPERM;
+	}
+
 	/* NO-OP IC for ensuring that IPA pipeline is empty */
 	nop_cmd_pyld =
 		ipahal_construct_nop_imm_cmd(false, IPAHAL_HPS_CLEAR, false);
