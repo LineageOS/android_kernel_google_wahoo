@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0f38ab5_4572f2cb",
+        "filename": "arch/arm64/configs/lineageos_muskie_defconfig",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 23886
+      },
+      "writtenOn": "2020-04-01T12:25:14Z",
+      "side": 0,
+      "message": "CONFIG_MODULES is in an Android core kernel requirement. Refer to https://android.googlesource.com/kernel/common/+/android-4.4-o/android/configs/android-base.cfg\n\nThis leads to an abrupt internal system error message on boot unless we spoof /proc/config.gz with the stock defconfig as done by Sultan here.\n\nhttps://github.com/kerneltoast/android_kernel_google_wahoo/commit/dce49db900ab6de612a5b78aa3928fb05fe054e5",
+      "revId": "b521ce4eb75002f2723aa39ba2109f79e82b62c9",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    }
+  ]
+}
