@@ -16,6 +16,24 @@
       "revId": "b521ce4eb75002f2723aa39ba2109f79e82b62c9",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f2c687b_cdf5e80f",
+        "filename": "arch/arm64/configs/lineageos_muskie_defconfig",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 11801
+      },
+      "writtenOn": "2020-04-01T14:21:29Z",
+      "side": 0,
+      "message": "I think I prefer sultan\u0027s patch to keeping CONFIG_MODULES enabled.",
+      "parentUuid": "c0f38ab5_4572f2cb",
+      "revId": "b521ce4eb75002f2723aa39ba2109f79e82b62c9",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
     }
   ]
 }
