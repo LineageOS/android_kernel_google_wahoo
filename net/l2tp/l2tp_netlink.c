@@ -72,8 +72,10 @@ static struct l2tp_session *l2tp_nl_session_find(struct genl_info *info)
 		tunnel_id = nla_get_u32(info->attrs[L2TP_ATTR_CONN_ID]);
 		session_id = nla_get_u32(info->attrs[L2TP_ATTR_SESSION_ID]);
 		tunnel = l2tp_tunnel_find(net, tunnel_id);
-		if (tunnel)
+		if (tunnel) {
 			session = l2tp_session_find(net, tunnel, session_id);
+			l2tp_tunnel_dec_refcount(tunnel);
+		}
 	}
 
 	return session;
