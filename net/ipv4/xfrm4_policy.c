@@ -20,7 +20,7 @@
 static struct xfrm_policy_afinfo xfrm4_policy_afinfo;
 
 static struct dst_entry *__xfrm4_dst_lookup(struct net *net, struct flowi4 *fl4,
-					    int tos,
+					    int tos, int oif,
 					    const xfrm_address_t *saddr,
 					    const xfrm_address_t *daddr,
 					    u32 mark)
@@ -30,6 +30,7 @@ static struct dst_entry *__xfrm4_dst_lookup(struct net *net, struct flowi4 *fl4,
 	memset(fl4, 0, sizeof(*fl4));
 	fl4->daddr = daddr->a4;
 	fl4->flowi4_tos = tos;
+	fl4->flowi4_oif = oif;
 	fl4->flowi4_mark = mark;
 	if (saddr)
 		fl4->saddr = saddr->a4;
@@ -43,24 +44,24 @@ static struct dst_entry *__xfrm4_dst_lookup(struct net *net, struct flowi4 *fl4,
 	return ERR_CAST(rt);
 }
 
-static struct dst_entry *xfrm4_dst_lookup(struct net *net, int tos,
+static struct dst_entry *xfrm4_dst_lookup(struct net *net, int tos, int oif,
 					  const xfrm_address_t *saddr,
 					  const xfrm_address_t *daddr,
 					  u32 mark)
 {
 	struct flowi4 fl4;
 
-	return __xfrm4_dst_lookup(net, &fl4, tos, saddr, daddr, mark);
+	return __xfrm4_dst_lookup(net, &fl4, tos, oif, saddr, daddr, mark);
 }
 
-static int xfrm4_get_saddr(struct net *net,
+static int xfrm4_get_saddr(struct net *net, int oif,
 			   xfrm_address_t *saddr, xfrm_address_t *daddr,
 			   u32 mark)
 {
 	struct dst_entry *dst;
 	struct flowi4 fl4;
 
-	dst = __xfrm4_dst_lookup(net, &fl4, 0, NULL, daddr, mark);
+	dst = __xfrm4_dst_lookup(net, &fl4, 0, oif, NULL, daddr, mark);
 	if (IS_ERR(dst))
 		return -EHOSTUNREACH;
 
