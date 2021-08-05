@@ -15,7 +15,6 @@
 #include <linux/debugfs.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
-#include <linux/module.h>
 #include <linux/ptrace.h>
 #include <linux/seq_file.h>
 
@@ -283,7 +282,7 @@ static int jr_func(struct pt_regs *regs, u32 ir)
 		err = mipsr6_emul(regs, nir);
 		if (err > 0) {
 			regs->cp0_epc = nepc;
-			err = mips_dsemul(regs, nir, cepc);
+			err = mips_dsemul(regs, nir, epc, cepc);
 			if (err == SIGILL)
 				err = SIGEMT;
 			MIPS_R2_STATS(dsemul);
@@ -941,42 +940,42 @@ repeat:
 		switch (rt) {
 		case tgei_op:
 			if ((long)regs->regs[rs] >= MIPSInst_SIMM(inst))
-				do_trap_or_bp(regs, 0, "TGEI");
+				do_trap_or_bp(regs, 0, 0, "TGEI");
 
 			MIPS_R2_STATS(traps);
 
 			break;
 		case tgeiu_op:
 			if (regs->regs[rs] >= MIPSInst_UIMM(inst))
-				do_trap_or_bp(regs, 0, "TGEIU");
+				do_trap_or_bp(regs, 0, 0, "TGEIU");
 
 			MIPS_R2_STATS(traps);
 
 			break;
 		case tlti_op:
 			if ((long)regs->regs[rs] < MIPSInst_SIMM(inst))
-				do_trap_or_bp(regs, 0, "TLTI");
+				do_trap_or_bp(regs, 0, 0, "TLTI");
 
 			MIPS_R2_STATS(traps);
 
 			break;
 		case tltiu_op:
 			if (regs->regs[rs] < MIPSInst_UIMM(inst))
-				do_trap_or_bp(regs, 0, "TLTIU");
+				do_trap_or_bp(regs, 0, 0, "TLTIU");
 
 			MIPS_R2_STATS(traps);
 
 			break;
 		case teqi_op:
 			if (regs->regs[rs] == MIPSInst_SIMM(inst))
-				do_trap_or_bp(regs, 0, "TEQI");
+				do_trap_or_bp(regs, 0, 0, "TEQI");
 
 			MIPS_R2_STATS(traps);
 
 			break;
 		case tnei_op:
 			if (regs->regs[rs] != MIPSInst_SIMM(inst))
-				do_trap_or_bp(regs, 0, "TNEI");
+				do_trap_or_bp(regs, 0, 0, "TNEI");
 
 			MIPS_R2_STATS(traps);
 
@@ -1033,7 +1032,7 @@ repeat:
 			if (nir) {
 				err = mipsr6_emul(regs, nir);
 				if (err > 0) {
-					err = mips_dsemul(regs, nir, cpc);
+					err = mips_dsemul(regs, nir, epc, cpc);
 					if (err == SIGILL)
 						err = SIGEMT;
 					MIPS_R2_STATS(dsemul);
@@ -1082,7 +1081,7 @@ repeat:
 			if (nir) {
 				err = mipsr6_emul(regs, nir);
 				if (err > 0) {
-					err = mips_dsemul(regs, nir, cpc);
+					err = mips_dsemul(regs, nir, epc, cpc);
 					if (err == SIGILL)
 						err = SIGEMT;
 					MIPS_R2_STATS(dsemul);
@@ -1159,7 +1158,7 @@ repeat:
 		if (nir) {
 			err = mipsr6_emul(regs, nir);
 			if (err > 0) {
-				err = mips_dsemul(regs, nir, cpc);
+				err = mips_dsemul(regs, nir, epc, cpc);
 				if (err == SIGILL)
 					err = SIGEMT;
 				MIPS_R2_STATS(dsemul);
@@ -2214,7 +2213,7 @@ fpu_emul:
 	}
 
 	/*
-	 * Lets not return to userland just yet. It's constly and
+	 * Let's not return to userland just yet. It's costly and
 	 * it's likely we have more R2 instructions to emulate
 	 */
 	if (!err && (pass++ < MIPS_R2_EMUL_TOTAL_PASS)) {

@@ -14,6 +14,8 @@
 #ifndef __LINUX_ARM_SMCCC_H
 #define __LINUX_ARM_SMCCC_H
 
+#include <linux/linkage.h>
+#include <linux/types.h>
 #include <uapi/linux/const.h>
 
 /*

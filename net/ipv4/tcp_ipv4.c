@@ -729,8 +729,8 @@ static void tcp_v4_send_ack(const struct sock *sk, struct sk_buff *skb,
 #endif
 			];
 	} rep;
-	struct net *net = sock_net(sk);
 	struct ip_reply_arg arg;
+	struct net *net = sock_net(sk);
 
 	memset(&rep.th, 0, sizeof(struct tcphdr));
 	memset(&arg, 0, sizeof(arg));

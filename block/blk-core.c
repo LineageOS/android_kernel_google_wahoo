@@ -4077,7 +4077,7 @@ int __init blk_dev_init(void)
  * them when printing them out.
  */
 ssize_t
-blk_latency_hist_show(char *name, struct io_latency_state *s, char *buf,
+blk_latency_hist_show(char* name, struct io_latency_state *s, char *buf,
 		int buf_size)
 {
 	int i;

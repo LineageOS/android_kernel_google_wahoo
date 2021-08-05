@@ -88,14 +88,14 @@ struct gadget_info {
 	bool use_os_desc;
 	char b_vendor_code;
 	char qw_sign[OS_STRING_QW_SIGN_LEN];
+	spinlock_t spinlock;
+	bool unbind;
 #ifdef CONFIG_USB_CONFIGFS_UEVENT
 	bool connected;
 	bool sw_connected;
 	struct work_struct work;
 	struct device *dev;
 #endif
-	spinlock_t spinlock;
-	bool unbind;
 };
 
 static inline struct gadget_info *to_gadget_info(struct config_item *item)
@@ -1643,6 +1643,18 @@ static void android_disconnect(struct usb_gadget *gadget)
 	}
 
 	gi = container_of(cdev, struct gadget_info, cdev);
+
+	/* FIXME: There's a race between usb_gadget_udc_stop() which is likely
+	 * to set the gadget driver to NULL in the udc driver and this drivers
+	 * gadget disconnect fn which likely checks for the gadget driver to
+	 * be a null ptr. It happens that unbind (doing set_gadget_data(NULL))
+	 * is called before the gadget driver is set to NULL and the udc driver
+	 * calls disconnect fn which results in cdev being a null ptr.
+	 */
+	if (cdev == NULL) {
+		WARN(1, "%s: gadget driver already disconnected\n", __func__);
+		return;
+	}
 
 	/* accessory HID support can be active while the
 		accessory function is not actually enabled,

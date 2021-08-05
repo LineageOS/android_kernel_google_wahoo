@@ -1748,7 +1748,7 @@ blk_update_latency_hist(struct io_latency_state *s, u_int64_t delta_us)
 	s->latency_sum += delta_us;
 }
 
-ssize_t blk_latency_hist_show(char *name, struct io_latency_state *s,
+ssize_t blk_latency_hist_show(char* name, struct io_latency_state *s,
 		char *buf, int buf_size);
 
 #else /* CONFIG_BLOCK */
