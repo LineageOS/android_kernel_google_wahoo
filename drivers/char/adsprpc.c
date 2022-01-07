@@ -2712,6 +2712,7 @@ static ssize_t fastrpc_debugfs_read(struct file *filp, char __user *buffer,
 		len += scnprintf(fileinfo + len, DEBUGFS_SIZE - len,
 					"\n%s\n",
 					"LIST OF MAPS:");
+		mutex_lock(&fl->map_mutex);
 		hlist_for_each_entry_safe(map, n, &fl->maps, hn) {
 			len += scnprintf(fileinfo + len, DEBUGFS_SIZE - len,
 						"%s %p %s %lx %s %llx\n",
@@ -2719,6 +2720,7 @@ static ssize_t fastrpc_debugfs_read(struct file *filp, char __user *buffer,
 						"map->va:", map->va,
 						"map->phys:", map->phys);
 		}
+		mutex_unlock(&fl->map_mutex);
 		len += scnprintf(fileinfo + len, DEBUGFS_SIZE - len,
 					"\n%s\n",
 					"LIST OF PENDING SMQCONTEXTS:");
