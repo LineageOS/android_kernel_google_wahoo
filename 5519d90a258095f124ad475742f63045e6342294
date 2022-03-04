@@ -16,6 +16,23 @@
       "message": "There are still (more than a) few things unclear:\n- CONFIG_USER_NS - most likely not needed\n- last selinux commit seems to be not necessary\n- last selinux chain seems to fix: avc: denied { write } for comm\u003d\"main\" dev\u003d\"cgroup2\" ino\u003d2 scontext\u003du:r:zygote:s0 tcontext\u003du:object_r:unlabeled:s0 tclass\u003dfile permissive\u003d0\n- network accounting seems to work for mobile data and not wifi. But this seems to be AOSP bug as it also shows similar issues on barbet + raven\n- network restrictions seem to work\n- BPF programs load\n\nBruno\u0027s msm8998 tree was partially used as base \u0026 is very similar",
       "revId": "5519d90a258095f124ad475742f63045e6342294",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a6f0a11_65a41bac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3917
+      },
+      "writtenOn": "2022-03-04T20:10:06Z",
+      "side": 1,
+      "message": "Unsquashed tree: https://github.com/chrmhoffmann/android_kernel_google_wahoo/tree/staging/lineage-19.0",
+      "revId": "5519d90a258095f124ad475742f63045e6342294",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
