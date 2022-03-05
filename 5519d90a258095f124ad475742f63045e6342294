@@ -33,6 +33,23 @@
       "message": "Unsquashed tree: https://github.com/chrmhoffmann/android_kernel_google_wahoo/tree/staging/lineage-19.0",
       "revId": "5519d90a258095f124ad475742f63045e6342294",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "836057cb_f703ab8d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3917
+      },
+      "writtenOn": "2022-03-05T21:03:33Z",
+      "side": 1,
+      "message": "CONFIG_USER_NS was dropped from final push",
+      "revId": "5519d90a258095f124ad475742f63045e6342294",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
