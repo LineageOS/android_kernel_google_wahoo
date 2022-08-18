@@ -28,6 +28,7 @@
 
 &firmware_android {
 	compatible = "android,firmware";
+	boot_devices = "soc/1da4000.ufshc";
 	vbmeta {
 		compatible = "android,vbmeta";
 		parts = "vbmeta,boot,system,vendor,dtbo";
@@ -40,6 +41,7 @@
 			type = "ext4";
 			mnt_flags = "ro,barrier=1";
 			fsmgr_flags = "wait,slotselect,avb";
+			status = "disabled";
 		};
 	};
 };
