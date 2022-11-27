@@ -95,7 +95,7 @@ static int compute_effective_progs(struct cgroup *cgrp,
 				   enum bpf_attach_type type,
 				   struct bpf_prog_array __rcu **array)
 {
-	struct bpf_prog_array __rcu *progs;
+	struct bpf_prog_array *progs;
 	struct bpf_prog_list *pl;
 	struct cgroup *p = cgrp;
 	int cnt = 0;
@@ -120,13 +120,12 @@ static int compute_effective_progs(struct cgroup *cgrp,
 					    &p->bpf.progs[type], node) {
 				if (!pl->prog)
 					continue;
-				rcu_dereference_protected(progs, 1)->
-					progs[cnt++] = pl->prog;
+				progs->progs[cnt++] = pl->prog;
 			}
 		p = cgroup_parent(p);
 	} while (p);
 
-	*array = progs;
+	rcu_assign_pointer(*array, progs);
 	return 0;
 }
 
@@ -425,3 +424,36 @@ int __cgroup_bpf_run_filter(struct sock *sk,
 	return ret == 1 ? 0 : -EPERM;
 }
 EXPORT_SYMBOL(__cgroup_bpf_run_filter);
+
+/**
+ * __cgroup_bpf_run_filter_sk() - Run a program on a sock
+ * @sk: sock structure to manipulate
+ * @type: The type of program to be exectuted
+ *
+ * socket is passed is expected to be of type INET or INET6.
+ *
+ * The program type passed in via @type must be suitable for sock
+ * filtering. No further check is performed to assert that.
+ *
+ * This function will return %-EPERM if any if an attached program was found
+ * and if it returned != 1 during execution. In all other cases, 0 is returned.
+ */
+int __cgroup_bpf_run_filter_sk(struct sock *sk,
+			       enum bpf_attach_type type)
+{
+	struct cgroup *cgrp = sock_cgroup_ptr(&sk->sk_cgrp_data);
+	struct bpf_prog *prog;
+	int ret = 0;
+
+
+	rcu_read_lock();
+
+	prog = rcu_dereference(cgrp->bpf.effective[type]->progs[0]);
+	if (prog)
+		ret = BPF_PROG_RUN(prog, sk) == 1 ? 0 : -EPERM;
+
+	rcu_read_unlock();
+
+	return ret;
+}
+EXPORT_SYMBOL(__cgroup_bpf_run_filter_sk);
