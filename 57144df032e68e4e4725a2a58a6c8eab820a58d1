@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afb9e131_90a04fac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3917
+      },
+      "writtenOn": "2022-12-31T12:37:05Z",
+      "side": 1,
+      "message": "Not part of pixel ASB but improves patch import for 346576",
+      "revId": "57144df032e68e4e4725a2a58a6c8eab820a58d1",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
