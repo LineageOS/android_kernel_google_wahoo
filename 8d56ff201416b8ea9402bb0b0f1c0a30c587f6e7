@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f3e9064_929a73fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3917
+      },
+      "writtenOn": "2023-02-27T19:01:39Z",
+      "side": 1,
+      "message": "https://github.com/chrmhoffmann/android_kernel_google_wahoo/commits/staging/CVEs",
+      "revId": "8d56ff201416b8ea9402bb0b0f1c0a30c587f6e7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
