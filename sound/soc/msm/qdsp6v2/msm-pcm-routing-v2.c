@@ -1760,6 +1760,11 @@ static void msm_pcm_routing_process_voice(u16 reg, u16 val, int set)
 
 	pr_debug("%s: reg %x val %x set %x\n", __func__, reg, val, set);
 
+	if (!session_id) {
+		pr_err("%s: Invalid session_id %x\n", __func__, session_id);
+		return;
+	}
+
 	session_id = msm_pcm_routing_get_voc_sessionid(val);
 
 	pr_debug("%s: FE DAI 0x%x session_id 0x%x\n",
