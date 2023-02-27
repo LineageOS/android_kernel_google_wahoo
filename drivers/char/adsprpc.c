@@ -314,10 +314,13 @@ struct fastrpc_file {
 	int cid;
 	int ssrcount;
 	int pd;
+	int file_close;
 	struct fastrpc_apps *apps;
 	struct fastrpc_perf perf;
 	struct dentry *debugfs_file;
 	struct mutex map_mutex;
+	/* Flag to indicate dynamic process creation status */
+	bool in_process_create;
 };
 
 static struct fastrpc_apps gfa;
@@ -1787,6 +1790,16 @@ static int fastrpc_init_process(struct fastrpc_file *fl,
 			int attrs;
 			int siglen;
 		} inbuf;
+
+		spin_lock(&fl->hlock);
+		if (fl->in_process_create) {
+			err = -EALREADY;
+			pr_err("Already in create init process\n");
+			spin_unlock(&fl->hlock);
+			return err;
+		}
+		fl->in_process_create = true;
+		spin_unlock(&fl->hlock);
 		inbuf.pgid = current->tgid;
 		inbuf.namelen = strlen(current->comm) + 1;
 		inbuf.filelen = init->filelen;
@@ -1949,6 +1962,11 @@ bail:
 	}
 	if (file)
 		fastrpc_mmap_free(file);
+	if (init->flags == FASTRPC_INIT_CREATE) {
+		spin_lock(&fl->hlock);
+		fl->in_process_create = false;
+		spin_unlock(&fl->hlock);
+	}
 	return err;
 }
 
@@ -2471,6 +2489,10 @@ static int fastrpc_file_free(struct fastrpc_file *fl)
 
 	(void)fastrpc_release_current_dsp_process(fl);
 
+	spin_lock(&fl->hlock);
+	fl->file_close = 1;
+	fl->in_process_create = false;
+	spin_unlock(&fl->hlock);
 	if (!IS_ERR_OR_NULL(fl->init_mem))
 		fastrpc_buf_free(fl->init_mem, 0);
 	fastrpc_context_list_dtor(fl);
@@ -2690,6 +2712,7 @@ static ssize_t fastrpc_debugfs_read(struct file *filp, char __user *buffer,
 		len += scnprintf(fileinfo + len, DEBUGFS_SIZE - len,
 					"\n%s\n",
 					"LIST OF MAPS:");
+		mutex_lock(&fl->map_mutex);
 		hlist_for_each_entry_safe(map, n, &fl->maps, hn) {
 			len += scnprintf(fileinfo + len, DEBUGFS_SIZE - len,
 						"%s %p %s %lx %s %llx\n",
@@ -2697,6 +2720,7 @@ static ssize_t fastrpc_debugfs_read(struct file *filp, char __user *buffer,
 						"map->va:", map->va,
 						"map->phys:", map->phys);
 		}
+		mutex_unlock(&fl->map_mutex);
 		len += scnprintf(fileinfo + len, DEBUGFS_SIZE - len,
 					"\n%s\n",
 					"LIST OF PENDING SMQCONTEXTS:");
@@ -2818,6 +2842,7 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
 	fl->mode = FASTRPC_MODE_SERIAL;
 	fl->cid = -1;
 	fl->init_mem = NULL;
+	fl->in_process_create = false;
 
 	if (debugfs_file != NULL)
 		fl->debugfs_file = debugfs_file;
@@ -2897,6 +2922,14 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int ioctl_num,
 
 	p.inv.fds = NULL;
 	p.inv.attrs = NULL;
+	spin_lock(&fl->hlock);
+	if (fl->file_close == 1) {
+		err = EBADF;
+		pr_warn("ADSPRPC: fastrpc_device_release is happening, So not sending any new requests to DSP");
+		spin_unlock(&fl->hlock);
+		goto bail;
+	}
+	spin_unlock(&fl->hlock);
 
 	switch (ioctl_num) {
 	case FASTRPC_IOCTL_INVOKE:
