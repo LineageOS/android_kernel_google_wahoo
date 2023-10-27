@@ -78,7 +78,7 @@ int diag_md_register(int id, int ctx, struct diag_mux_ops *ops)
 	return 0;
 }
 
-void diag_md_open_all()
+void diag_md_open_all(void)
 {
 	int i;
 	struct diag_md_info *ch = NULL;
@@ -92,7 +92,7 @@ void diag_md_open_all()
 	return;
 }
 
-void diag_md_close_all()
+void diag_md_close_all(void)
 {
 	int i, j;
 	unsigned long flags;
@@ -389,7 +389,7 @@ int diag_md_close_peripheral(int id, uint8_t peripheral)
 	return 0;
 }
 
-int diag_md_init()
+int diag_md_init(void)
 {
 	int i, j;
 	struct diag_md_info *ch = NULL;
@@ -418,7 +418,7 @@ fail:
 	return -ENOMEM;
 }
 
-void diag_md_exit()
+void diag_md_exit(void)
 {
 	int i;
 	struct diag_md_info *ch = NULL;

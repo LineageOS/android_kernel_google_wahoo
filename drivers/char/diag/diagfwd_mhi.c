@@ -717,7 +717,7 @@ fail:
 	return -ENOMEM;
 }
 
-void diag_mhi_exit()
+void diag_mhi_exit(void)
 {
 	int i;
 	struct diag_mhi_info *mhi_info = NULL;
