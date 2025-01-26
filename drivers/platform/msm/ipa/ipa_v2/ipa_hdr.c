@@ -831,6 +831,7 @@ ipa_insert_failed:
 	}
 	htbl->hdr_cnt--;
 	list_del(&entry->link);
+
 fail_dma_mapping:
 	entry->is_hdr_proc_ctx = false;
 bad_hdr_len:

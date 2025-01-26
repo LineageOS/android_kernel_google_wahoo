@@ -4284,12 +4284,6 @@ static int ipa3_post_init(const struct ipa3_plat_drv_res *resource_p,
 		if (result != GSI_STATUS_SUCCESS) {
 			IPAERR(":gsi register error - %d\n", result);
 			result = -ENODEV;
-			/*
-			 * IPA Driver initialization failed,
-			 * without which data transfer will not work.
-			 * BUG_ON for IPA team to analyze the issue
-			 */
-			BUG();
 			goto fail_register_device;
 		}
 		IPADBG("IPA gsi is registered\n");
@@ -4316,12 +4310,6 @@ static int ipa3_post_init(const struct ipa3_plat_drv_res *resource_p,
 		if (result) {
 			IPAERR(":bam register error - %d\n", result);
 			result = -EPROBE_DEFER;
-			/*
-			 * IPA Driver initialization failed,
-			 * without which data transfer will not work.
-			 * BUG_ON for IPA team to analyze the issue
-			 */
-			BUG_ON(result);
 			goto fail_register_device;
 		}
 		IPADBG("IPA BAM is registered\n");
@@ -4331,12 +4319,6 @@ static int ipa3_post_init(const struct ipa3_plat_drv_res *resource_p,
 	if (ipa3_setup_apps_pipes()) {
 		IPAERR(":failed to setup IPA-Apps pipes\n");
 		result = -ENODEV;
-		/*
-		 * IPA Driver initialization failed,
-		 * without which data transfer will not work.
-		 * BUG_ON for IPA team to analyze the issue
-		 */
-		BUG_ON(result);
 		goto fail_setup_apps_pipes;
 	}
 	IPADBG("IPA System2Bam pipes were connected\n");
@@ -4347,12 +4329,6 @@ static int ipa3_post_init(const struct ipa3_plat_drv_res *resource_p,
 		if (result) {
 			IPAERR(":teth_bridge init failed (%d)\n", -result);
 			result = -ENODEV;
-			/*
-			 * IPA Driver initialization failed,
-			 * without which data transfer will not work.
-			 * BUG_ON for IPA team to analyze the issue
-			 */
-			BUG_ON(result);
 			goto fail_teth_bridge_driver_init;
 		}
 		IPADBG("teth_bridge initialized");
@@ -5096,7 +5072,7 @@ static int ipa3_pre_init(const struct ipa3_plat_drv_res *resource_p,
 	IPADBG("ipa cdev added successful. major:%d minor:%d\n",
 			MAJOR(ipa3_ctx->dev_num),
 			MINOR(ipa3_ctx->dev_num));
-	/* proxy vote for modem is added in ipa3_post_init() phase */
+	/* proxy vote for motem is added in ipa3_post_init() phase */
 	IPA_ACTIVE_CLIENTS_DEC_SIMPLE();
 	return 0;
 

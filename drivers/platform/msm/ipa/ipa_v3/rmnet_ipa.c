@@ -1690,7 +1690,6 @@ static int ipa3_wwan_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 			}
 			extend_ioctl_data.u.rmnet_mux_val.vchannel_name
 				[IFNAMSIZ-1] = '\0';
-
 			IPAWANDBG("ADD_MUX_CHANNEL(%d, name: %s)\n",
 			extend_ioctl_data.u.rmnet_mux_val.mux_id,
 			extend_ioctl_data.u.rmnet_mux_val.vchannel_name);
