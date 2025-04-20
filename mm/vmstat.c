@@ -1218,7 +1218,7 @@ static bool is_zone_first_populated(pg_data_t *pgdat, struct zone *zone)
 {
 	int zid;
 
-	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+	for (zid = ZONE_NORMAL; zid < MAX_NR_ZONES; zid++) {
 		struct zone *compare = &pgdat->node_zones[zid];
 
 		if (populated_zone(compare))
