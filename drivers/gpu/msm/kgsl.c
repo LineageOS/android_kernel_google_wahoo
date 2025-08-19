@@ -291,6 +291,7 @@ static void kgsl_destroy_ion(struct kgsl_memdesc *memdesc)
 	 * doesn't try to free it again
 	 */
 	memdesc->sgt = NULL;
+	entry->priv_data = NULL;
 }
 
 static struct kgsl_memdesc_ops kgsl_dmabuf_ops = {
